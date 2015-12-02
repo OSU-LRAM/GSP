@@ -10,5 +10,5 @@ Thumbs.db
 
 # Sysplotter data and configuration files #
 ######################
-sysplotterconfig.mat
+sysplotter_config.mat
 sysplotter_data
