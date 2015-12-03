@@ -4,8 +4,6 @@ function shapechangemenu_CreateFcn(hObject, eventdata, handles)
     % eventdata  reserved - to be defined in a future version of MATLAB
     % handles    empty - handles not created until after all CreateFcns called
 
-    % Hint: popupmenu controls usually have a white background on Windows.
-    %       See ISPC and COMPUTER.
     set(hObject,'BackgroundColor','white');
     
 	% Load the path files to the system data

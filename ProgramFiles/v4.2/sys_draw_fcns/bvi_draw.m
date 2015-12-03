@@ -1,16 +1,16 @@
 function plot_info = bvi_draw(s,p,plot_info,sys,shch,convert,resolution) %#ok<INUSD>
 %draw the bvi plots
 
-	% custom red colors
-	crimson = [234 14 30]/255;
-	granite = [100 100 118]/255;
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 	
 	% define a color/linestyle list
-	linelist = {crimson, '-';
-		granite, '--';
+	linelist = {Colorset.spot, '-';
+		Colorset.secondary, '--';
 		'k' ,':';
-		crimson, '--';
-		granite, ':';
+		Colorset.spot, '--';
+		Colorset.secondary, ':';
 		'k' ,'-'};
 		
 

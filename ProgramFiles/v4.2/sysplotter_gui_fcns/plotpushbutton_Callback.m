@@ -4,6 +4,7 @@ function plotpushbutton_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
+
 %Update the waitbar to indicate that the process has started
 waitbar2a(0,handles.progresspanel,'Gathering plot data');
 
@@ -18,7 +19,7 @@ source_number_text = source_name(end);
 
 %get the checkbox values
 [box_names, box_active, box_values, box_enabled, plot_types, ...
-	plot_subtypes,merged_plot_subtypes plot_style] =...
+	plot_subtypes,merged_plot_subtypes, plot_style] =...
 	get_box_values(source_number_text,handles); %#ok<ASGLU>
 
 %get the height function type to plot

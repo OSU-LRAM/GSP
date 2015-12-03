@@ -41,8 +41,8 @@ function output = sysf_honey_swimmer(input_mode)
 			s.density.eval = [21 21];   %density for function evaluations
 			s.finite_element_density = 31;
 			% power metric
-			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				({@discrete_joint_1;@discrete_joint_2},[x;y],1,1);
+			%s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
+				%({@discrete_joint_1;@discrete_joint_2},[x;y],1,1);
 			%%%
 			%Display parameters
 

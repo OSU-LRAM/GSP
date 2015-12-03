@@ -22,7 +22,7 @@ function varargout = sysplotter_config(varargin)
 
 % Edit the above text to modify the response to help sysplotter_config
 
-% Last Modified by GUIDE v2.5 09-Nov-2011 22:19:24
+% Last Modified by GUIDE v2.5 02-Dec-2015 17:46:52
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -62,28 +62,31 @@ guidata(hObject, handles);
 % UIWAIT makes sysplotter_config wait for user response (see UIRESUME)
 % uiwait(handles.sysplotter_config_gui);
 
-% Add a path for subfunctions
+% Add a path for subfunctions and utilities
 addpath('sysplotter_config_fcns/');
+addpath('Utilities');
+    
+	% Default values for HH and refpoint paths
+    set(handles.inputpathconfig,'String','../../UserFiles/')
+	set(handles.HodgeHelmholtzconfig,'String','HodgeHelmholtz')
+	set(handles.Refpointconfig,'String','RefPointOptimizer')
+	set(handles.Colorconfig,'String','sys_draw_fcns/colorsets/color_Red.m')
+	
 
-% Check for existence of sysplotter_config.mat data file
-configfile = './sysplotter_config.mat';
-if exist(configfile,'file')
-    load(configfile);
-    set(handles.inputpathconfig,'String',inputpath)
-	set(handles.HodgeHelmholtzconfig,'String',HHpath)
-	set(handles.Refpointconfig,'String',Refpointpath)
-end
-
-
+    % Check for existence of sysplotter_config.mat data file
+    configfile = './sysplotter_config.mat';
+    if exist(configfile,'file')
+        load(configfile);
+        set(handles.inputpathconfig,'String',inputpath)
+        set(handles.HodgeHelmholtzconfig,'String',HHpath)
+        set(handles.Refpointconfig,'String',Refpointpath)
+        set(handles.Colorconfig,'String',Colorpath)
+    end
+    
     % Verify that the target directory has the necessary subdirectories
     targetdir = get(handles.inputpathconfig,'String');
     v = verify_configdir(targetdir);
-    
-	% Default values for HH and refpoint paths
-	set(handles.HodgeHelmholtzconfig,'String','HodgeHelmholtz')
-	set(handles.Refpointconfig,'String','RefPointOptimizer')
-	
-	
+
     % Only activate the OK button if the string is valid
     if v
         set(handles.OKbutton,'enable','on');

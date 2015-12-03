@@ -1,5 +1,9 @@
 function plot_info = hfun_draw(s,p,plot_info,sys,shch,convert,resolution)
 %Draw the height function
+    
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 
     %height function list
     hfun_list = {'X','Y','T','Xopt','Yopt','Topt'};
@@ -211,9 +215,9 @@ function plot_info = hfun_draw(s,p,plot_info,sys,shch,convert,resolution)
 				nicebox(ax,'on')
 				
 				%load the color map
-				load('BlackWhiteRedColormap','blackred');
+                coloration = Colorset.colormap;
 				if s.singularity
-					blackred = blackred.^5;
+					coloration = coloration.^5;
 				end
 
 				
@@ -260,7 +264,7 @@ function plot_info = hfun_draw(s,p,plot_info,sys,shch,convert,resolution)
 				end
 				
 				%set the color map
-				load('BlackRedColormap','blackred');
+				coloration = Colorset.colormap_contour;
 
 				
 			otherwise
@@ -286,7 +290,7 @@ function plot_info = hfun_draw(s,p,plot_info,sys,shch,convert,resolution)
 
 		end
 
-		set(parH,'Colormap',blackred);
+		set(parH,'Colormap',coloration);
 
 		%center the color map around zero
 		Clim = get(ax,'Clim'); %get the current color limits
