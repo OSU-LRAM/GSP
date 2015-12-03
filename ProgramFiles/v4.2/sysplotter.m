@@ -22,7 +22,7 @@ function varargout = sysplotter(varargin)
 
 % Edit the above text to modify the response to help sysplotter
 
-% Last Modified by GUIDE v2.5 14-Jun-2012 14:36:52
+% Last Modified by GUIDE v2.5 02-Dec-2015 17:23:09
 
 	%path to gui functions
 	addpath(genpath('sysplotter_gui_fcns'), genpath('sys_calcpath_fcns'),...
@@ -139,8 +139,13 @@ guidata(hObject, handles);
 % the system and shape change menus
 plotpublishpushbutton_enable_menu(handles)
 
+%Get the configuration file, and extract the Colorpath
+configfile = './sysplotter_config';
+load(configfile,'Colorset');
+
 % Create an empty progress bar in the progress bar panel
-waitbar2a(0,handles.progresspanel,'waitbartext','Waiting for input');
+waitbar2a(0,handles.progresspanel,'waitbartext','Waiting for input',...
+    'barcolor',Colorset.spot);
 
 
 

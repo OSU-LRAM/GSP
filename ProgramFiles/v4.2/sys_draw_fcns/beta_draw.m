@@ -1,6 +1,10 @@
 function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 %Draw the height function
 
+    %Get the configuration file, and extract the Colorpath
+    configfile = './sysplotter_config';
+    load(configfile,'Colorset');
+
 	%height function list
 	beta_list = {'X','Y','T'};
 	beta_names = {'$\beta_{x}$','$\beta_{y}$','$\beta_{\theta}$'};
@@ -18,7 +22,7 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 	% get the number of position dimensions
 	n_g = numel(s.height);
 
-	% Set up the zata for the plot
+	% Set up the zdata for the plot
 	if ~strcmp(shch,'null')
 		if n_dim == 2
 
@@ -27,17 +31,13 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 			for i = 1:numel(p.phi_locus)
 
 				for j = 1:numel(p.phi_locus{i})
-
-					for k = 1:numel(p.phi_locus{i}{j}.Beta)
-
-						zdata{k}{i}{j} = p.phi_locus{i}{j}.Beta{k};
-
-					end
-
+                    
+                    zdata{j}{i} = p.phi_locus_full{i}.Beta{j};
+ 
 				end
 
 			end
-
+ 
 		end
 	end	
 	
@@ -87,7 +87,7 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 			case 'surface'
 		
 				%Plot the height function
-				meshhandle = mesh(ax,grid{:},B{function_number});
+				meshhandle = surf(ax,grid{:},B{function_number});
 				
 				%If there's a shape change involved, plot it
 				if ~strcmp(shch,'null')
@@ -103,10 +103,16 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 				%Put an outline box around the plot
 				nicebox(ax,'on')
 				
-			case 'contour'
+                %load the color map
+                coloration = Colorset.colormap;
+				if s.singularity
+					coloration = coloration.^5;
+                end
+                
+            case 'contour'
 				
 				%Plot the height function
-				[junk, meshhandle] = contour(ax,grid{:},B{function_number});
+				[junk, meshhandle] = contour(ax,grid{:},B{function_number},7,'linewidth',2);
 				
 				%If there's a shape change involved, plot it
 				if ~strcmp(shch,'null')
@@ -137,14 +143,15 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 
 				%square axes
 				axis(ax,'equal','tight')
+                
+                %set the color map
+				coloration = Colorset.colormap_contour;
 				
 			otherwise
 				
 				error('Unknown plot style for the beta function')
 				
 		end
-		%set the color map
-		load('BlackRedColormap','blackred');
 		
 		%Iterate up the tree to find the figure that contains the current
 		%axis
@@ -162,7 +169,7 @@ function plot_info = beta_draw(s,p,plot_info,sys,shch,convert,resolution)
 			end
 
 		end
-		set(parB,'Colormap',blackred);
+		set(parB,'Colormap',coloration);
 
 		%center the color map around zero
 		Clim = get(ax,'Clim'); %get the current color limits
