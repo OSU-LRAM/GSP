@@ -2,7 +2,7 @@
 Geometric System Plotter:  A geometric mechanics GUI and visualizer.
 
 To run this project:
-Go to the ProgramFiles/v4.2 folder and run sysplotter.m to start the GUI. (4.1 is for Matlab 2012 and older). You can use the pull-down menus to select systems and shape changes, then use the checkboxes to choose which plots you want. There are three sets of checkboxes, so that you can save different sets of plots to go back and forth between them; in each set, the left column gives you plots in original coordinates, and the right box gives you plots in optimal coordinates.
+If this is your first time running the program, and go to the ProgramFiles/v4.2 folder and run sysplotter_config.m to start the GUI.  Then go to the ProgramFiles/v4.2 folder and run sysplotter.m to start the GUI. (4.1 is for Matlab 2012 and older). You can use the pull-down menus to select systems and shape changes, then use the checkboxes to choose which plots you want. There are three sets of checkboxes, so that you can save different sets of plots to go back and forth between them; in each set, the left column gives you plots in original coordinates, and the right box gives you plots in optimal coordinates.
 
 To use the serpenoid-curve swimmer file, you'll need to have the LowRe_toolbox and curvature_mode_toolbox files in your matlab path.
 
