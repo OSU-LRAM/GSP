@@ -57,12 +57,13 @@ function [stroke] = right_circle(t)
 
 	t = t(:)';
     
-    angle = pi/4;
-    Rot = [cos(angle),-sin(angle);...
-           sin(angle), cos(angle)];
+    ang = pi/4;
+    Rot = [cos(ang),-sin(ang);...
+           sin(ang), cos(ang)];
 	a=1.0;
 
-	stroke=(Rot*[a*(cos(t+pi)+1);a*sin(t)])';
+	stroke=(Rot*[a*(cos(t+pi)+1);...
+                 a*sin(t)])';
 
 
 end
@@ -71,9 +72,9 @@ function [stroke] = left_circle(t)
 
 	t = t(:)';
 
-    angle = pi/4;
-    Rot = [cos(angle),-sin(angle);...
-           sin(angle), cos(angle)];
+    ang = pi/4;
+    Rot = [cos(ang),-sin(ang);...
+           sin(ang), cos(ang)];
 	a=1.0;
 
 	stroke=(Rot*[a*(cos(t)-1);a*sin(t)])';
