@@ -10,9 +10,9 @@ function V = se2_integrator_all_terms(t,X,s,phi_fun,dphi_fun)
 	
 	% Get the local connection at the current time, in both sets of
 	% coordinates
-	A_original = cellfun(@(Y) -interpn(s.grid.eval{:},Y,shapelist{:}),s.vecfield.eval.content.Avec);
+	A_original = cellfun(@(Y) -interpn(s.grid.eval{:},Y,shapelist{:},'spline'),s.vecfield.eval.content.Avec);
 
-	A_optimized = cellfun(@(Y) -interpn(s.grid.eval{:},Y,shapelist{:}),s.vecfield.eval.content.Avec_optimized);
+	A_optimized = cellfun(@(Y) -interpn(s.grid.eval{:},Y,shapelist{:},'spline'),s.vecfield.eval.content.Avec_optimized);
 			
 	
 	% Get the body velocity at the current time

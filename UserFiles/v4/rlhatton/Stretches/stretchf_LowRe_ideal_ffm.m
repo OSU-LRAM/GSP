@@ -1,4 +1,4 @@
-function output = stretchf_LowRe_ideal_test(inputmode)
+function output = stretchf_LowRe_ideal_ffm(inputmode)
 % Pointer to a stretch file in the sysplotter_data folder
 
 	switch inputmode
@@ -9,7 +9,7 @@ function output = stretchf_LowRe_ideal_test(inputmode)
 			
 		case 'target'
 			
-			output = 'honey_stretch_test';
+			output = 'honey_stretch_ffm';
 			
 	end
 

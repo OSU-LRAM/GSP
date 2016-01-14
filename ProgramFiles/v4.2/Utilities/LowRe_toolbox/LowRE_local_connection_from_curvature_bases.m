@@ -1,4 +1,4 @@
-function [A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_input,r,L,c)
+function [A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_input,r,L,c,drag_ratio)
 % Calculate the local connection for a set of curvature bases
 %
 % Inputs:
@@ -6,6 +6,7 @@ function [A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_inp
 % r: coefficients for basis functions
 % L: total length of swimmer
 % c: drag per unit length
+% drag_ratio: ratio of lateral to longitudinal drag
 
 % Specified integration limits
 int_limit = L*[-0.5 0.5];
@@ -15,7 +16,7 @@ int_limit = L*[-0.5 0.5];
 
 % Now integrate to get the pfaffian
 %Omega_sol = ode45( @(s,Omega) connection_helper(s,h(s),J(s)),int_limit,zeros(3,3+length(r)));
-Omega_sol = ode_multistart(@ode45,@(s,Omega) connection_helper(s,h(s),J(s),c),int_limit,int_limit(1),zeros(3,3+length(r)));
+Omega_sol = ode_multistart(@ode45,@(s,Omega) connection_helper(s,h(s),J(s),c,drag_ratio),int_limit,int_limit(1),zeros(3,3+length(r)));
 
 Omega = reshape(Omega_sol(int_limit(end)),3,[]);
 
@@ -23,7 +24,7 @@ A = Omega(:,1:3)\Omega(:,4:end);
 
 end
 
-function dOmega = connection_helper(s,h,J,c) %#ok<INUSL>
+function dOmega = connection_helper(s,h,J,c,drag_ratio) %#ok<INUSL>
 % Calculate the derivative of the local connection as it's built up along
 % the backbone
 
@@ -32,9 +33,9 @@ function dOmega = connection_helper(s,h,J,c) %#ok<INUSL>
 			-sin(h(3)) cos(h(3)) 0;
 			0 0 1];
 		
-	% Local drag, based on unit longitudinal drag, double lateral, no local
+	% Local drag, based on unit longitudinal drag, lateral according to the ratio, no local
 	% torsional drag, multiplied by drag coefficient
-	xi_local_to_F_local = [-1 0 0;0 -2 0;0 0 0]*c;
+	xi_local_to_F_local = [-1 0 0;0 -drag_ratio 0;0 0 0]*c;
 	
 	% Force local element applies at midpoint-tangent-frame
 	F_local_to_F_midpoint = [cos(h(3)) -sin(h(3)) 0;

@@ -27,10 +27,12 @@ function p = find_g(s,p)
 			if ~isfield(p,'fixed_step_integration') || (p.fixed_step_integration == 0)
 			
 				% Solution for all the displacements
+                %odeoptions = odeset('RelTol',1e-6,'AbsTol',1e-12);
+                
 				sol = ode45(@(t,y) se2_integrator_all_terms...
 					(t,y,s,p.phi_fun{i}{j},p.dphi_fun{i}{j}) ...
 					,p.time{i}{j}([1 end]) ...
-					,zeros(12,1));
+					,zeros(12,1));%,odeoptions);
 
 
 	% 			% Extract the BVI and displacement functions relative to the start of the segment

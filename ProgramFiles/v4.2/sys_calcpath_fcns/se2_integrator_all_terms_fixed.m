@@ -45,8 +45,8 @@ function p = se2_integrator_all_terms_fixed(s,p,i,j)
 	%Multiply the connection by the shape diffs
 	
 	
-	A_diff_prod = sum(-A_shch .* repmat(shape_diff,[n_dim,1]),2);
-	A_diff_prod_optimized = sum(A_shch_optimized .* repmat(shape_diff,[n_dim,1]),2);
+	A_diff_prod = -sum(A_shch .* repmat(dshape,[n_dim,1]),2);
+	A_diff_prod_optimized = sum(A_shch_optimized .* repmat(dshape,[n_dim,1]),2);
 
 	%If there is a ref point connection modifier, calc velocities
 	%for it as well

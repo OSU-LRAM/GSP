@@ -44,7 +44,7 @@ function output = shchf_diffdrive_example(input_mode)
 
 			%number of points in each path.
 			p.phi_res{1} = {100, 100};
-
+            
 
 			%%%%
 			%Output the path properties

@@ -1,4 +1,4 @@
-function output = sysf_honey_swimmer_serpenoid_rss(input_mode)
+function output = sysf_honey_swimmer_serpenoid_1p5(input_mode)
 
 	% Default arguments
 	if ~exist('input_mode','var')
@@ -18,13 +18,13 @@ function output = sysf_honey_swimmer_serpenoid_rss(input_mode)
 
 		case 'name'
 
-			output = 'Low Re Serpenoid first modes RSS'; % Display name
+			output = 'Low Re Serpenoid first modes 1.5 waves'; % Display name
 
 		case 'dependency'
 
 			output.dependency = {'Utilities/curvature_mode_toolbox/backbone_from_curvature_bases.m',
 				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_1.m',
-				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_2_half_period.m',
+				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_2.m',
 				'Utilities/LowRE_toolbox/LowRE_dissipation_metric_from_curvature_bases.m',
 				'Utilities/LowRE_toolbox/LowRE_local_connection_from_curvature_bases.m'};
 
@@ -55,10 +55,10 @@ function output = sysf_honey_swimmer_serpenoid_rss(input_mode)
 			s.density.vector = [11 11]; %density to display vector field
 			s.density.scalar = [21 21]; %density to display scalar functions
 			s.density.eval = [21 21];   %density for function evaluations
-			s.finite_element_density = 21;
+			s.finite_element_density = 11;
 			% power metric
 			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				({@serpenoid_1;@serpenoid_2_half_period},[x;y],1,1);
+				({@(s) serpenoid_1(s,1.5);@(s) serpenoid_2(s,1.5)},[x;y],1,1,2);  % @(x,y) eye(2);%
 
 			%%%
 			%Display parameters
@@ -104,11 +104,11 @@ end
 
 function A = A_num_helper(a1,a2)
 
-	% Add the path to the curvature functions
-	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
-	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
+% 	% Add the path to the curvature functions
+% 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
+% 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
 	% Get the local connection for the specified shape, with unit length
-	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2_half_period},[a1;a2],1,1,2);
+	A = LowRE_local_connection_from_curvature_bases({@(s) serpenoid_1(s,1.5);@(s) serpenoid_2(s,1.5)},[a1;a2],1,1,2);
 
 
 end

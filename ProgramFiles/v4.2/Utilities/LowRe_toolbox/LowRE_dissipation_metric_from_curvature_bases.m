@@ -1,4 +1,4 @@
-function Mp = LowRE_dissipation_metric_from_curvature_bases(kappa_basis_input,r,L,c)
+function Mp = LowRE_dissipation_metric_from_curvature_bases(kappa_basis_input,r,L,c,drag_ratio)
 % Calculate the dissipation power metric for a set of curvature bases
 
 	% Specified integration limits
@@ -8,7 +8,7 @@ function Mp = LowRE_dissipation_metric_from_curvature_bases(kappa_basis_input,r,
 	drag = [1 0; 0 2]*c;
 
 	% Get the backbone locus, Jacobian, and Local Connection functions
-	[A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_input,r,L,c);
+	[A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_input,r,L,c,drag_ratio);
 
 	% Integrate along the body for the power metric
 	Mp_sol = ode_multistart(@ode45,@(s,Mp) dMetric(s,Mp,A,h,J,drag),int_limit,int_limit(1),zeros(length(r)^2,1));
