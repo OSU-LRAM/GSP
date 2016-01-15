@@ -1,6 +1,7 @@
 function [nodes,cubes] = hypercube_mesh(grid)
 % Generate a normalized tetrahedral mesh over a hypercubic region with a
-% given density
+% given density, where grid is a cell array of an N-D mesh,
+% [grid{1},grid{2},... grid{N}] = ndgrid(...)
 
 	% turn grid into node list
 	nodes = grid_to_columns(grid);
