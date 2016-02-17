@@ -39,10 +39,11 @@ function output = sysf_honey_swimmer(input_mode)
 			s.density.vector = [11 11]; %density to display vector field
 			s.density.scalar = [21 21]; %density to display scalar functions
 			s.density.eval = [21 21];   %density for function evaluations
-			s.finite_element_density = 31;
+            s.density.metric_eval = [11 11]; %density for metric evaluations
+			s.finite_element_density = 21;
 			% power metric
-			%s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				%({@discrete_joint_1;@discrete_joint_2},[x;y],1,1);
+			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
+				({@discrete_joint_1;@discrete_joint_2},[x;y],1,1,2);
 			%%%
 			%Display parameters
 
