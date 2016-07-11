@@ -7,7 +7,7 @@ function dS = pathlength_integrator(t,y,s,phi_fun,dphi_fun) %#ok<INUSL>
 	
 	% Evaluate the metric tensor
 
-	M = cellfun(@(Y) interpn(s.grid.eval{:},Y,shapelist{:}),s.metricfield.eval.content.metric);
+	M = cellfun(@(Y) interpn(s.grid.metric_eval{:},Y,shapelist{:}),s.metricfield.metric_eval.content.metric);
 	
 	% get the contribution to the pathlength
 	dS = sqrt(dshape(:)' * M * dshape(:));
