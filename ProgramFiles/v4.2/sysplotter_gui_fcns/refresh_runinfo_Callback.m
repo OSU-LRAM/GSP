@@ -8,8 +8,9 @@ function [update, dep_update] = refresh_runinfo_Callback(hObject, eventdata, han
 	
 	addpath('sys_update_fcns')
 
-	% Declare a red
-	crimson = [234 14 30]/255;
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 	
 	% Read the menus
 	syslist = get(handles.systemmenu,'UserData');
@@ -41,13 +42,13 @@ function [update, dep_update] = refresh_runinfo_Callback(hObject, eventdata, han
 	for i = 1:length(components),
 		
 		if dep_update.(components{i})
-			set(handles.([components{i} '_dep_indicator']),'BackgroundColor',crimson)
+			set(handles.([components{i} '_dep_indicator']),'BackgroundColor',Colorset.spot)
 		else
 			set(handles.([components{i} '_dep_indicator']),'BackgroundColor','w')
 		end
 
 		if update.(components{i})
-			set(handles.([components{i} '_run_indicator']),'BackgroundColor',crimson)
+			set(handles.([components{i} '_run_indicator']),'BackgroundColor',Colorset.spot)
 		else
 			set(handles.([components{i} '_run_indicator']),'BackgroundColor','w')
 		end

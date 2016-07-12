@@ -2,14 +2,19 @@
 function s = create_grids(s)
 
     %list of grids that will be made
-    grid_list = {'vector','scalar','eval'};
-    
+    grid_list = {'vector','scalar','eval','metric_eval'};
+        
     % Create a cell array to hold the grid primitives
 	gridprim = cell(length(s.grid_range)/2,1);
 	
     %Loop over list, creating the grids
     for i = 1:length(grid_list)
 		
+        % default value for any grid size
+        if ~isfield(s.density,grid_list{i})
+            s.density.(grid_list{i}) = 11;
+        end
+        
 		% If necessary, duplicate out a single value given as the grid
 		% density
 		if numel(s.density.(grid_list{i})) == 1

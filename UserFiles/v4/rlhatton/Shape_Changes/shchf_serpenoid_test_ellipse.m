@@ -38,7 +38,7 @@ function output = shchf_serpenoid_test_ellipse(input_mode)
 
 
 			%path resolution
-			p.phi_res{1} = {50};
+			p.phi_res{1} = {200};
 
 
 			%%%%

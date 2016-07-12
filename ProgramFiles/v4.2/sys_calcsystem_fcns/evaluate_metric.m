@@ -13,13 +13,13 @@ function s = evaluate_metric(s)
 	end
 
 	if ~isfield(s,'metric_den')
-		s.metric_den = @(varargin) eye(size(shape_test_list,1));
+		s.metric_den = @(varargin) ones(size(shape_test_list,1));
 	end
 
     %list of zoom levels at which to evaluate connection vector fields and the
     %grid which should be used for them
     metric_field_list = {'display','vector';
-                         'eval','eval'};
+                         'metric_eval','metric_eval'};
                      
     %loop over list, creating the vector fields
     for i = 1:size(metric_field_list,1);

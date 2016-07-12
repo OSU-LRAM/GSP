@@ -1,6 +1,8 @@
-function kappa = serpenoid_2(s)
+function kappa = serpenoid_2(s,omega)
 %sinusoidal curvature
 
-%kappa = cos(pi*(s+1));
+if ~exist('omega','var')
+    omega = 1;
+end
 
-kappa = -sin(2*pi*s);
+kappa = sin(2*pi*omega*s);
