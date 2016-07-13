@@ -65,6 +65,7 @@ guidata(hObject, handles);
 % Add a path for subfunctions and utilities
 addpath('sysplotter_config_fcns/');
 addpath('Utilities');
+addpath('Utilities/gait_gui_draw')
     
 	% Default values for HH and refpoint paths
     set(handles.inputpathconfig,'String','../../UserFiles/')
