@@ -1,5 +1,4 @@
-function output = sysf_kinsnake_pi_over_2(input_mode)
-
+function output = sysf_kin_float_hybrid(input_mode,datapath)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -14,7 +13,7 @@ function output = sysf_kinsnake_pi_over_2(input_mode)
 
 		case 'name'
 
-			output = 'Kinematic Snake pi/2'; % Display name
+			output = 'Kinematic Snake Floating Snake hybrid'; % Display name
 
 		case 'dependency'
 
@@ -22,12 +21,15 @@ function output = sysf_kinsnake_pi_over_2(input_mode)
 
 		case 'initialize'
 
+			%Initialize a kinematic snake with unit values for L and R
+
 			%%%%%
 			% Filename to save to
 			output = mfilename;
 
 
 			%Functional representation of local connection
+            bandgap = 0.125;
 			s.A_num = @Conn_num;
 			s.A_den = @Conn_den;
 
@@ -68,27 +70,47 @@ function output = sysf_kinsnake_pi_over_2(input_mode)
 
 end
 
-% Numerator of the connection
-function A_num = Conn_num(a1,a2)
+function A_num = Conn_num(a1,a2,bandgap)
 
 %	Unit body length
     L = 1/6;
     R = 1/6;
     
-    A_num = R * [R + L*cos(a2) , R + L*cos(a1);
+    
+        
+    A_num_kin = R * [R + L*cos(a2) , R + L*cos(a1);
                  zeros(size(a1)), zeros(size(a1));
                  sin(a2), sin(a1)];
+                     
+    A_num_float = R  * [zeros(size(a1)) zeros(size(a1));
+        zeros(size(a1)) zeros(size(a1));
+        -(5+3*cos(a1)+cos(a1-a2)) (5+3*cos(a2)+cos(a1-a2))];
+    
+    
+    % Merge two connections with masking
+    A_num = A_num_kin;
+    A_num(abs(a1-a2)<0.25) = A_num_float(abs(a1-a2)<0.25);
+        
                  
 end
 
-% Denominator of the connection
-function A_den = Conn_den(a1,a2)
+function A_den = Conn_den(a1,a2,bandgap)
 
 %	Unit body length
     L = 1/6;
     R = 1/6;
+            
+    A_den_kin = repmat((R*(sin(a1)-sin(a2)) + L*sin(a1-a2)),[3,2]);
     
-    A_den = repmat((R*(sin(a1)-sin(a2)) + L*sin(a1-a2)),[3,2]);
+        
+    A_den_float = [ ones(size(a1)), ones(size(a1));
+        ones(size(a1)), ones(size(a1)) ;
+         (19+6*cos(a1)+6*cos(a2)+2*cos(a1-a2)) (19+6*cos(a1)+6*cos(a2)+2*cos(a1-a2))];
+
+    % Merge two connections with masking
+    A_den = A_den_kin;
+    A_den(abs(a1-a2)<0.25) = A_den_float(abs(a1-a2)<0.25);
+  
     
 end
     

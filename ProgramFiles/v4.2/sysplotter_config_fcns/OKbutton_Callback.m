@@ -28,9 +28,11 @@ function OKbutton_Callback(hObject, eventdata, handles)
     Colorset = feval(colorfunction);
     Colorpath = get(handles.Colorconfig,'String');
     
+    % Additional hard-coded paths
+    sysplotterpath = pwd;
 
     % Save the path info to a file for sysplotter to refer to
-    save('sysplotter_config','inputpath','syspath','shchpath','stretchpath','datapath','HHpath','Refpointpath','Colorset','Colorpath');
+    save('sysplotter_config','inputpath','syspath','shchpath','stretchpath','datapath','HHpath','Refpointpath','Colorset','Colorpath','sysplotterpath');
     
     % Update the sysplotter_inputpath variable in the workspace
     assignin('base','sysplotter_inputpath',inputpath);
