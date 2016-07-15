@@ -260,6 +260,25 @@ ax = [];
 % Wait until enter is pressed.
 uiwait(hFig);
 
+        for idx = 1:length(propsToChange)
+            set(allHG(validObjects(:, idx)), propsToChange(idx), curCallbacks{idx});
+        end
+        
+        % Restore window functions and pointer
+        %         set(hFig, 'WindowButtonDownFcn', curWBDF);
+        %         set(hFig, 'WindowButtonMotionFcn', curWBMF);
+        %         set(hFig, 'WindowButtonUpFcn', curWBUF);
+        %         set(hFig, 'KeyPressFcn', curKPF);
+        %         set(hFig, 'KeyReleaseFcn', curKRF);
+        %         set(hFig, 'ResizeFcn', curRF);
+        
+        % Restore pointer
+        set(hFig, 'Pointer', curPointer);
+        set(hFig, 'PointerShapeCData', curPointerShapeCData);
+
+        % Delete invisible axes and return control
+        delete(hInvisibleAxes);
+
 
 %--------------------------------------------------------------------------
     function mouseMoveFcn(varargin)
@@ -410,24 +429,24 @@ uiwait(hFig);
     function exitFcn()
         % This function exits GINPUTC and restores previous figure settings
         
-        for idx = 1:length(propsToChange)
-            set(allHG(validObjects(:, idx)), propsToChange(idx), curCallbacks{idx});
-        end
-        
-        % Restore window functions and pointer
-        %         set(hFig, 'WindowButtonDownFcn', curWBDF);
-        %         set(hFig, 'WindowButtonMotionFcn', curWBMF);
-        %         set(hFig, 'WindowButtonUpFcn', curWBUF);
-        %         set(hFig, 'KeyPressFcn', curKPF);
-        %         set(hFig, 'KeyReleaseFcn', curKRF);
-        %         set(hFig, 'ResizeFcn', curRF);
-        
-        % Restore pointer
-        set(hFig, 'Pointer', curPointer);
-        set(hFig, 'PointerShapeCData', curPointerShapeCData);
-
-        % Delete invisible axes and return control
-        delete(hInvisibleAxes);
+%         for idx = 1:length(propsToChange)
+%             set(allHG(validObjects(:, idx)), propsToChange(idx), curCallbacks{idx});
+%         end
+%         
+%         % Restore window functions and pointer
+%         %         set(hFig, 'WindowButtonDownFcn', curWBDF);
+%         %         set(hFig, 'WindowButtonMotionFcn', curWBMF);
+%         %         set(hFig, 'WindowButtonUpFcn', curWBUF);
+%         %         set(hFig, 'KeyPressFcn', curKPF);
+%         %         set(hFig, 'KeyReleaseFcn', curKRF);
+%         %         set(hFig, 'ResizeFcn', curRF);
+%         
+%         % Restore pointer
+%         set(hFig, 'Pointer', curPointer);
+%         set(hFig, 'PointerShapeCData', curPointerShapeCData);
+% 
+%         % Delete invisible axes and return control
+%         delete(hInvisibleAxes);
         uiresume(hFig);
     end
 %--------------------------------------------------------------------------
