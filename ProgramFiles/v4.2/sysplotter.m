@@ -22,7 +22,7 @@ function varargout = sysplotter(varargin)
 
 % Edit the above text to modify the response to help sysplotter
 
-% Last Modified by GUIDE v2.5 02-Dec-2015 17:23:09
+% Last Modified by GUIDE v2.5 13-Jul-2016 14:49:31
 
 	%path to gui functions
 	addpath(genpath('sysplotter_gui_fcns'), genpath('sys_calcpath_fcns'),...

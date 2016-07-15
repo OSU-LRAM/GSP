@@ -1,13 +1,26 @@
-function gait_gui_draw
+function gait_gui_draw(hAx)
 
 % Load the sysplotter configuration information
 load sysplotter_config
 
-% Bring current axis to foreground
-figure(gcf)
+% Bring selected axis to foreground (use gca if this is not specified)
+if ~exist('hAx','var') || isempty(hAx)
+    hAx = gca;
+end
 
+found_figure = 0;
+hSearch = hAx;
+while ~found_figure
+    hSearch = get(hSearch,'Parent');
+    if strcmpi(get(hSearch,'type'),'figure')
+        found_figure = 1;
+        hFig = hSearch;
+    end
+end
+figure(hFig)
+    
 % Use the mouse to select a series of points
-[alpha1,alpha2,button] = ginputc('ShowPoints',true,'Color',Colorset.spot);
+[alpha1,alpha2,button] = ginputc('AxHandle',hAx,'ShowPoints',true,'Color',Colorset.spot);
 
 % Unless a non-primary button was used for the last click, copy the first
 % point to the end to make a closed loop
@@ -46,7 +59,18 @@ t_plot = linspace(0,period,n_plot);
 alpha1_plot = fnval(spline_alpha1,t_plot);
 alpha2_plot = fnval(spline_alpha2,t_plot);
 
-gaitline = line(alpha1_plot,alpha2_plot,'Color',Colorset.spot,'LineWidth',5);
+% Provide zdata to line if necessary
+maxZ = 0;
+hAxChildren = get(hAx,'Children');
+if ~isempty(hAxChildren)
+   for idx = 1:numel(hAxChildren)
+       if ~isempty(hAxChildren(idx).ZData)
+           maxZ = max(maxZ,max(hAxChildren(idx).ZData(:)));
+       end
+   end
+end
+
+gaitline = line('Parent',hAx,'XData',alpha1_plot,'YData',alpha2_plot,'ZData',maxZ*ones(size(alpha1_plot)),'Color',Colorset.spot,'LineWidth',5);
 
 %%%% Ask the user for a filename
 current_dir = pwd; % Remember where we started
@@ -97,15 +121,8 @@ if ~usercancel
         
     end
     
-    % Refresh the sysplotter gui
-    try
-        set(groot,'ShowHiddenHandles','on');            % Crack open the sysplotter visibility
-        refresh_handle = findobj('tag','refresh_gui');  % Get the handle for the button
-        refresh_handle.Callback(refresh_handle,0)       % Push the refresh button
-        set(groot,'ShowHiddenHandles','off');            % Reseal the sysplotter
-    catch
-        set(groot,'ShowHiddenHandles','off');            % Make sure the sysplotter goes back to hidden handles
-    end
+    refresh_handle = findall(0,'tag','refresh_gui');  % Get the handle for the button
+    refresh_handle.Callback(refresh_handle,0)       % Push the refresh button
     
 end
         

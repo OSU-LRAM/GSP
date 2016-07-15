@@ -110,7 +110,57 @@ switch mode
         f.theta2.original = At2;
         f.theta2.reflect_even = At2;
         f.theta2.reflect_odd = At2;
-        f.theta2.rotate_180 = At2;        
+        f.theta2.rotate_180 = At2;   
+        
+ case 'None'
+        
+        % Shape reflections
+        f.a1.original = a1;
+        f.a1.reflect_even = a1;
+        f.a1.reflect_odd = a1;
+        f.a1.rotate_180 = a1;
+
+        f.a2.original = a2;
+        f.a2.reflect_even = a2;
+        f.a2.reflect_odd = a2;
+        f.a2.rotate_180 = a2;
+
+        % X field
+        f.x1.original = Axa1;
+        f.x1.reflect_even = Axa1;
+        f.x1.reflect_odd = Axa1;
+        f.x1.rotate_180 = Axa1;
+
+        f.x2.original = Axa2;
+        f.x2.reflect_even = Axa2;
+        f.x2.reflect_odd = Axa2;
+        f.x2.rotate_180 = Axa2;
+
+        % Y field
+        f.y1.original = Aya1;
+        f.y1.reflect_even = Aya1;
+        f.y1.reflect_odd = Aya1;
+        f.y1.rotate_180 = Aya1;
+
+        f.y2.original = Aya2;
+        f.y2.reflect_even = Aya2;
+        f.y2.reflect_odd = Aya2;
+        f.y2.rotate_180 = Aya2;
+
+        % Theta field
+        f.theta1.original = At1;
+        f.theta1.reflect_even = At1;
+        f.theta1.reflect_odd = At1;
+        f.theta1.rotate_180 = At1;
+
+        f.theta2.original = At2;
+        f.theta2.reflect_even = At2;
+        f.theta2.reflect_odd = At2;
+        f.theta2.rotate_180 = At2;  
+        
+    otherwise
+        
+        error('Invalid symmetry averaging mode')
         
 end
 

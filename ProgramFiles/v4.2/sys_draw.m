@@ -1,4 +1,4 @@
-function sys_draw(plot_structure,sys,shch,progress,update,resolution,handles)
+function plot_info = sys_draw(plot_structure,sys,shch,progress,update,resolution,handles)
 
 	%make sure plot data file is up to date
 	if update
@@ -40,7 +40,7 @@ function sys_draw(plot_structure,sys,shch,progress,update,resolution,handles)
 		eval(['plot_command = @' plot_structure(i).category '_draw;']);
 
 		%call that plot command
-		plot_info = plot_command(s,p,plot_structure(i),sys,shch,convert,resolution);
+		plot_info(i,1) = plot_command(s,p,plot_structure(i),sys,shch,convert,resolution);
 
 	end
 

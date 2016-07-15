@@ -59,6 +59,8 @@ function [x, y, button, ax] = ginputc(varargin)
 % Jiro Doke
 % October 19, 2012
 % Copyright 2012 The MathWorks, Inc.
+%
+% Small modifications by Ross Hatton, 2016
 
 try
     if verLessThan('matlab', '7.5')
@@ -75,21 +77,23 @@ p = inputParser();
 
 addOptional(p, 'N', inf, @(x) validateattributes(x, {'numeric'}, ...
     {'scalar', 'integer', 'positive'}));
-addParamValue(p, 'FigHandle', [], @(x) numel(x)==1 && ishandle(x));
-addParamValue(p, 'Color', 'k', @colorValidFcn);
-addParamValue(p, 'LineWidth', 0.5 , @(x) validateattributes(x, ...
+addParameter(p, 'FigHandle', [], @(x) numel(x)==1 && ishandle(x));
+addParameter(p, 'AxHandle', [], @(x) numel(x)==1 && ishandle(x));
+addParameter(p, 'Color', 'k', @colorValidFcn);
+addParameter(p, 'LineWidth', 0.5 , @(x) validateattributes(x, ...
     {'numeric'}, {'scalar', 'positive'}));
-addParamValue(p, 'LineStyle', '-' , @(x) validatestring(x, ...
+addParameter(p, 'LineStyle', '-' , @(x) validatestring(x, ...
     {'-', '--', '-.', ':'}));
-addParamValue(p, 'ShowPoints', false, @(x) validateattributes(x, ...
+addParameter(p, 'ShowPoints', false, @(x) validateattributes(x, ...
     {'logical'}, {'scalar'}));
-addParamValue(p, 'ConnectPoints', true, @(x) validateattributes(x, ...
+addParameter(p, 'ConnectPoints', true, @(x) validateattributes(x, ...
     {'logical'}, {'scalar'}));
 
 parse(p, varargin{:});
 
 N = p.Results.N;
 hFig = p.Results.FigHandle;
+hAx = p.Results.AxHandle;
 color = p.Results.Color;
 linewidth = p.Results.LineWidth;
 linestyle = p.Results.LineStyle;
@@ -118,13 +122,25 @@ if isempty(hFig)
 end
 
 % Try to get the current axes even if it has a hidden handle.
-hAx = get(hFig, 'CurrentAxes');
 if isempty(hAx)
-    allAx = findall(hFig, 'Type', 'axes');
-    if ~isempty(allAx)
-        hAx = allAx(1);
-    else
-        hAx = axes('Parent', hFig);
+    hAx = get(hFig, 'CurrentAxes');
+    if isempty(hAx)
+        allAx = findall(hFig, 'Type', 'axes');
+        if ~isempty(allAx)
+            hAx = allAx(1);
+        else
+            hAx = axes('Parent', hFig);
+        end
+    end
+else
+    found_figure = 0;
+    hSearch = hAx;
+    while ~found_figure
+        hSearch = get(hSearch,'Parent');
+        if strcmpi(get(hSearch,'type'),'figure')
+            found_figure = 1;
+            hFig = hSearch;
+        end
     end
 end
 
@@ -166,14 +182,25 @@ set(hFig, ...
 
 % Create an invisible axes for displaying the full crosshair cursor
 hInvisibleAxes = axes(...
-    'Parent', hFig, ...
+    'Parent', get(hAx,'Parent'), ...
     'Units', 'normalized', ...
-    'Position', [0 0 1 1], ...
+    'Position', [0 0 1 1],...get(hAx,'Position'), ...
     'XLim', [0 1], ...
     'YLim', [0 1], ...
     'HitTest', 'off', ...
     'HandleVisibility', 'off', ...
     'Visible', 'off');
+%uistack(hInvisibleAxes,'top')
+
+% hInvisibleAxes = axes(...
+%     'Parent', hFig, ...
+%     'Units', 'normalized', ...
+%     'Position', [0 0 1 1], ...
+%     'XLim', [0 1], ...
+%     'YLim', [0 1], ...
+%     'HitTest', 'off', ...
+%     'HandleVisibility', 'off', ...
+%     'Visible', 'off');
 
 % Create line object for the selected points
 if showpoints
@@ -304,7 +331,6 @@ uiwait(hFig);
     function updatePoints(clickType)
         % This function captures the information for the selected point
         
-        hAx = gca;
         pt = get(hAx, 'CurrentPoint');
         x = [x; pt(1)];
         y = [y; pt(3)];
