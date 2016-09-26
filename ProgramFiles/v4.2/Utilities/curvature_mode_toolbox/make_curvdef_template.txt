@@ -1,0 +1,11 @@
+function output = AA_CURVFILENAME(s,params,mode)
+
+	% Default argument
+	if ~exist('input_mode','var')
+		
+		input_mode = 'initialize';
+		
+	end
+		
+	% Name the .mat file with the fourier coefficients
+	paramfile = 'AA_PARAMSNAME';

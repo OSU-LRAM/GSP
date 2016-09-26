@@ -1,4 +1,4 @@
-function output = sysf_honey_swimmer_serpenoid(input_mode)
+function output = sysf_honey_swimmer_piecewise_2modes(input_mode)
 
 	% Default arguments
 	if ~exist('input_mode','var')
@@ -18,13 +18,13 @@ function output = sysf_honey_swimmer_serpenoid(input_mode)
 
 		case 'name'
 
-			output = 'Low Re Serpenoid first modes'; % Display name
+			output = 'Low Re piecewise continuous two modes'; % Display name
 
 		case 'dependency'
 
 			output.dependency = {'Utilities/curvature_mode_toolbox/backbone_from_curvature_bases.m',
-				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_1.m',
-				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_2.m',
+				'Utilities/curvature_mode_toolbox/curvatures/constant_curvature_1.m',
+				'Utilities/curvature_mode_toolbox/curvatures/constant_curvature_2.m',
 				'Utilities/LowRE_toolbox/LowRE_dissipation_metric_from_curvature_bases.m',
 				'Utilities/LowRE_toolbox/LowRE_local_connection_from_curvature_bases.m'};
 
@@ -58,7 +58,7 @@ function output = sysf_honey_swimmer_serpenoid(input_mode)
 			s.finite_element_density = 11;
 			% power metric
 			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				({@serpenoid_1;@serpenoid_2},[x;y],1,1,2);  % @(x,y) eye(2);%
+				({@(s) constant_curvature_1(s);@(s) constant_curvature_2(s)},[x;y],1,1,2);  % @(x,y) eye(2);%
 
 			%%%
 			%Display parameters
@@ -83,7 +83,7 @@ function [Ar]=Conn_num(a1,a2)
 	%Apply the inverse multiplication
 	wb = waitbar2a(0,['Building ' num2str(size(a1)) ' connection matrix']);
 	Ar_cell = cell(size(a1));
-	parfor i = 1:numel(a1);
+	for i = 1:numel(a1);
 		Ar_cell{i} = A_num_helper(a1(i),a2(i));
 		waitbar2a(i/numel(a1));
 	end
@@ -108,7 +108,7 @@ function A = A_num_helper(a1,a2)
 % 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
 % 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
 	% Get the local connection for the specified shape, with unit length
-	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2},[a1;a2],1,1,2);
+	A = LowRE_local_connection_from_curvature_bases({@(s) constant_curvature_1(s);@(s) constant_curvature_2(s)},[a1;a2],1,1,2);
 
 
 end

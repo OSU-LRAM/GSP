@@ -1,4 +1,4 @@
-function output = sysf_honey_swimmer_serpenoid(input_mode)
+function output = sysf_honey_swimmer_serpenoid_general(input_mode)
 
 	% Default arguments
 	if ~exist('input_mode','var')
@@ -18,15 +18,14 @@ function output = sysf_honey_swimmer_serpenoid(input_mode)
 
 		case 'name'
 
-			output = 'Low Re Serpenoid first modes'; % Display name
+			output = 'Low Re Serpenoid first modes generalized curvature'; % Display name
 
 		case 'dependency'
 
-			output.dependency = {'Utilities/curvature_mode_toolbox/backbone_from_curvature_bases.m',
-				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_1.m',
-				'Utilities/curvature_mode_toolbox/curvatures/serpenoid_2.m',
-				'Utilities/LowRE_toolbox/LowRE_dissipation_metric_from_curvature_bases.m',
-				'Utilities/LowRE_toolbox/LowRE_local_connection_from_curvature_bases.m'};
+			output.dependency = {'Utilities/curvature_mode_toolbox/backbone_from_general_curvature.m';
+				'Utilities/curvature_mode_toolbox/curvatures/curv_serpenoid_unit';
+				'Utilities/LowRE_toolbox/LowRE_dissipation_metric_from_general_curvature.m';
+				'Utilities/LowRE_toolbox/LowRE_local_connection_from_general_curvature.m'};
 
 		case 'initialize'
 
@@ -57,8 +56,8 @@ function output = sysf_honey_swimmer_serpenoid(input_mode)
 			s.density.eval = [21 21];   %density for function evaluations
 			s.finite_element_density = 11;
 			% power metric
-			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				({@serpenoid_1;@serpenoid_2},[x;y],1,1,2);  % @(x,y) eye(2);%
+			s.metric = @(x,y) LowRE_dissipation_metric_from_general_curvature...
+				(@curvelock,[x;y],1,1,2);  % @(x,y) eye(2);%
 
 			%%%
 			%Display parameters
@@ -108,7 +107,7 @@ function A = A_num_helper(a1,a2)
 % 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
 % 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
 	% Get the local connection for the specified shape, with unit length
-	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2},[a1;a2],1,1,2);
+	A = LowRE_local_connection_from_general_curvature(@curvelock,[a1;a2],1,1,2);
 
 
 end
@@ -117,4 +116,13 @@ function A_den = Conn_den(a1,a2) %#ok<INUSD>
    
     A_den = repmat(ones(size(a1)),[3,2]);
     
+end
+
+
+function output = curvelock(s,params,mode)
+
+% lock the variable frequency serpenoid curvature to frequency 1
+
+    output = curv_serpenoid_unit(s,params,mode);
+
 end

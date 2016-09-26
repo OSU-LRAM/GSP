@@ -74,33 +74,62 @@ function s = optimize_coordinate_choice(s)
 	%%%%%
 	%Zero the potential function for theta at the center of the domain
 
-	% If the shapespace origin is within the domain, use that as E_theta=0.
+	% If the shapespace origin (zero or unity) is within the domain, use that as E_theta=0.
 	% Otherwise, use the value at the center of the domain
-	
-	% Create a mask to turn all the lower-bounds negative
-	n_dim = numel(size(E_theta));
-	mask = ones(1,2*n_dim);
-	mask(1:2:2*n_dim) = -1;
-	within = (mask .* s.grid_range)>0;
-	
-	if all(within)
-		
-		zcell = num2cell(zeros(n_dim,1));
-		
-		E_theta_offset = interpn(s.grid.eval{:},E_theta,zcell{:},'cubic');
-		
-	else
+% 	
+% 	% Create a mask to turn all the lower-bounds negative
+% 	n_dim = numel(size(E_theta));
+% 	mask = ones(1,2*n_dim);
+% 	mask(1:2:2*n_dim) = -1;
+% 	within = (mask .* s.grid_range)>0;
+% 	
+% 	if all(within)
+% 		
+% 		zcell = num2cell(zeros(n_dim,1));
+% 		
+% 		E_theta_offset = interpn(s.grid.eval{:},E_theta,zcell{:},'cubic');
+% 		
+% 	else
+% 
+% 		% Loop over the dimensions, getting the center values in each dimension
+% 		centervals = zeros(n_dim,2);
+% 		for i = 1:n_dim
+% 			centervals(i,:) = E_theta([floor((size(E_theta,i)+1)/2) ceil((size(E_theta,i)+1)/2)]);
+% 		end
+% 		% Mean these value to get the value at the center of the space
+% 		E_theta_offset = mean(centervals(:));
+% 		
+% 	end
 
-		% Loop over the dimensions, getting the center values in each dimension
-		centervals = zeros(n_dim,2);
-		for i = 1:n_dim
-			centervals(i,:) = E_theta([floor((size(E_theta,i)+1)/2) ceil((size(E_theta,i)+1)/2)]);
-		end
-		% Mean these value to get the value at the center of the space
-		E_theta_offset = mean(centervals(:));
-		
-	end
-	
+    n_dim = numel(size(E_theta));
+    centervals = num2cell(zeros(n_dim,1));
+
+    for idx = 1:n_dim;
+
+        dim_range = s.grid_range([(2*idx)-1,2*idx]); 
+
+        % If zero is in the range for a given dimension, center on that value
+        if (dim_range(1) <= 0) && (dim_range(2) >= 0)
+
+            centervals{idx} = 0;
+
+        % If one (unity) is in the range, center on that
+        elseif (dim_range(1) <= 1) && (dim_range(2) >= 1)
+
+            centervals{idx} = 1;
+
+        % Otherwise, put the center of the E_theta function at the middle
+        % of the grid range
+        else
+
+            centervals{idx} = mean(dim_range);
+
+        end
+
+    end
+
+    E_theta_offset = interpn(s.grid.eval{:},E_theta,centervals{:},'cubic');
+
 	E_theta = E_theta-E_theta_offset;
 		
 		

@@ -1,4 +1,4 @@
-function output = AA_SHCHFILENAME(input_mode)
+function output = shchf_params_8(input_mode)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -8,14 +8,14 @@ function output = AA_SHCHFILENAME(input_mode)
 	end
 		
 	% Name the .mat file with the fourier coefficients
-	paramfile = 'AA_PARAMSNAME';
+	paramfile = 'params_8';
 	
 	
 	switch input_mode
 		
 		case 'name'
 			
-			output = 'AA_DISPLAYNAME';
+			output = 'params_8';
 			
 		case 'dependency'
 			
@@ -39,39 +39,23 @@ function output = AA_SHCHFILENAME(input_mode)
             end
             
             % Generate spline structures for the selected points
-            switch splinemode
-                
-                case 'periodic'
-                    
-                    % Fit a periodic spline to the selected points; the endslopes are found
-                    % by averaging the positions of the points before and after the join
-                    endslope1 = (alpha1(2)-alpha1(end-1))/(t(end)-t(end-2));
-                    endslope2 = (alpha2(2)-alpha2(end-1))/(t(end)-t(end-2));
-                    spline_alpha1 = spline(t,[endslope1;alpha1(:);endslope1]);
-                    spline_alpha2 = spline(t,[endslope2;alpha2(:);endslope2]);
-                    
-                case 'complete'
-                    
-                    % Fit a non-periodic spline to the selected points
-                    spline_alpha1 = spline(t,alpha1(:));
-                    spline_alpha2 = spline(t,alpha2(:));
-
-            end
+            spline_alpha1 = csape(t,alpha1',splinemode);
+            spline_alpha2 = csape(t,alpha2',splinemode);
             
             % The gait path is now defined by evaluating the two splines at
             % specified times
-			p.phi_def = @(t) [ppval(spline_alpha1,t(:)),ppval(spline_alpha2,t(:))];
+			p.phi_def = @(t) [fnval(spline_alpha1,t(:)),fnval(spline_alpha2,t(:))];
             
             
             % Speed up execution by defining the gait velocity as well (so
             % the evaluator doesn't need to numerically take the derivative
             % at every time
-            spline_dalpha1 = ppdiff(spline_alpha1);
-            spline_dalpha2 = ppdiff(spline_alpha2);	
+            spline_dalpha1 = fnder(spline_alpha1);
+            spline_dalpha2 = fnder(spline_alpha2);	
             
             % The gait path is now defined by evaluating the two splin
             % derivatives at specified times
-			p.dphi_def = @(t) [ppval(spline_dalpha1,t(:)),ppval(spline_dalpha2,t(:))];
+			p.dphi_def = @(t) [fnval(spline_dalpha1,t(:)),fnval(spline_dalpha2,t(:))];
  
 			
 			%marker locations

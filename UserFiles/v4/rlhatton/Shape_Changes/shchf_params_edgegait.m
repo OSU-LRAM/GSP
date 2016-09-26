@@ -1,4 +1,4 @@
-function output = AA_SHCHFILENAME(input_mode)
+function output = shchf_params_edgegait(input_mode)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -8,14 +8,14 @@ function output = AA_SHCHFILENAME(input_mode)
 	end
 		
 	% Name the .mat file with the fourier coefficients
-	paramfile = 'AA_PARAMSNAME';
+	paramfile = 'params_edgegait';
 	
 	
 	switch input_mode
 		
 		case 'name'
 			
-			output = 'AA_DISPLAYNAME';
+			output = 'params_edgegait';
 			
 		case 'dependency'
 			
