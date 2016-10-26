@@ -1,13 +1,27 @@
-function gait_gui_draw
+function gait_gui_draw(hAx)
 
 % Load the sysplotter configuration information
 load sysplotter_config
 
-% Bring current axis to foreground
-figure(gcf)
 
+% Bring selected axis to foreground (use gca if this is not specified)
+if ~exist('hAx','var') || isempty(hAx)
+    hAx = gca;
+end
+
+found_figure = 0;
+hSearch = hAx;
+while ~found_figure
+    hSearch = get(hSearch,'Parent');
+    if strcmpi(get(hSearch,'type'),'figure')
+        found_figure = 1;
+        hFig = hSearch;
+    end
+end
+figure(hFig)
+    
 % Use the mouse to select a series of points
-[alpha1,alpha2,button] = ginputc('ShowPoints',true,'Color',Colorset.spot);
+[alpha1,alpha2,button] = ginputc('AxHandle',hAx,'ShowPoints',true,'Color',Colorset.spot);
 
 % Unless a non-primary button was used for the last click, copy the first
 % point to the end to make a closed loop
@@ -21,10 +35,14 @@ if button(end) == 1
     % Evenly space the points along one period
     t = linspace(0,period,numel(alpha1));
     
-    % Generate spline structures for the selected points
-    spline_alpha1 = csape(t,alpha1','periodic');
-    spline_alpha2 = csape(t,alpha2','periodic');
-        
+    % Fit a periodic spline to the selected points; the endslopes are found
+    % by averaging the positions of the points before and after the join
+    endslope1 = (alpha1(2)-alpha1(end-1))/(t(end)-t(end-2));
+    endslope2 = (alpha2(2)-alpha2(end-1))/(t(end)-t(end-2));
+    spline_alpha1 = spline(t,[endslope1;alpha1(:);endslope1]);
+    spline_alpha2 = spline(t,[endslope2;alpha2(:);endslope2]);
+    
+    
 else
     
     % Set the period of the open motion as 1
@@ -33,20 +51,31 @@ else
     % Evenly space the points along time from zero to 2pi
     t = linspace(0,period,numel(alpha1));
    
-    % Generate spline structures for the selected points
-    spline_alpha1 = csape(t,alpha1');
-    spline_alpha2 = csape(t,alpha2');
-
+    % Fit a non-periodic spline to the selected points
+    spline_alpha1 = spline(t,alpha1(:));
+    spline_alpha2 = spline(t,alpha2(:));
 
 end
 
 % Upsample and plot to show gait to user
 n_plot = 100;
 t_plot = linspace(0,period,n_plot);
-alpha1_plot = fnval(spline_alpha1,t_plot);
-alpha2_plot = fnval(spline_alpha2,t_plot);
 
-gaitline = line(alpha1_plot,alpha2_plot,'Color',Colorset.spot,'LineWidth',5);
+alpha1_plot = ppval(spline_alpha1,t_plot);
+alpha2_plot = ppval(spline_alpha2,t_plot);
+
+% Provide zdata to line if necessary
+maxZ = 0;
+hAxChildren = get(hAx,'Children');
+if ~isempty(hAxChildren)
+   for idx = 1:numel(hAxChildren)
+       if ~isempty(hAxChildren(idx).ZData)
+           maxZ = max(maxZ,max(hAxChildren(idx).ZData(:)));
+       end
+   end
+end
+
+gaitline = line('Parent',hAx,'XData',alpha1_plot,'YData',alpha2_plot,'ZData',maxZ*ones(size(alpha1_plot)),'Color',Colorset.spot,'LineWidth',5);
 
 %%%% Ask the user for a filename
 current_dir = pwd; % Remember where we started
@@ -66,8 +95,8 @@ while 1
         [~,paramfilenamebare,ext] = fileparts(paramfilename); % Break open the filename to get the extension
     end
     
-    if ( strncmp(paramfilename,'params_',7) && strcmp(ext,'.mat') )...
-                    && strcmp(fullfile(pathname,paramfilename),fullfile(shchpath,paramfilename))
+    if ( strncmpi(paramfilename,'params_',7) && strcmpi(ext,'.mat') )...
+                    && strcmpi(fullfile(pathname,paramfilename),fullfile(shchpath,paramfilename))
         usercancel = 0;
         break
     else
@@ -97,15 +126,8 @@ if ~usercancel
         
     end
     
-    % Refresh the sysplotter gui
-    try
-        set(groot,'ShowHiddenHandles','on');            % Crack open the sysplotter visibility
-        refresh_handle = findobj('tag','refresh_gui');  % Get the handle for the button
-        refresh_handle.Callback(refresh_handle,0)       % Push the refresh button
-        set(groot,'ShowHiddenHandles','off');            % Reseal the sysplotter
-    catch
-        set(groot,'ShowHiddenHandles','off');            % Make sure the sysplotter goes back to hidden handles
-    end
+    refresh_handle = findall(0,'tag','refresh_gui');  % Get the handle for the button
+    refresh_handle.Callback(refresh_handle,0)       % Push the refresh button
     
 end
         

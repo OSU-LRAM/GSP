@@ -147,9 +147,11 @@ function plot_info = xy_draw_helper(s,p,plot_info,sys,shch,convert,optselect);
 		% Set the axes with a nice buffering
 		[x_min,x_max,y_min,y_max] = ...
 			set_axis_limits(ax,x_collect,y_collect,.07,.07);
-	end
+    end
+    set(ax,'ZLim',10*[-1 1]); % prevent layering from going outside zlim
 	axis(ax,'equal');
 	new_lim = [get(ax,'xlim') get(ax,'ylim')];
+    
 	
 	
 	%%%%%%%

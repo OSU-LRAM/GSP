@@ -1,5 +1,5 @@
 % --- Executes on button press in any plotpushbutton.
-function plotpushbutton_Callback(hObject, eventdata, handles)
+function plot_info = plotpushbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to plotpushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -64,7 +64,7 @@ resolution.scalar_range = get(handles.scalarresolution,'UserData');
 
 %Call the draw function
 %    test_plot(plots_to_make,current_system,current_shch)
-sys_draw(plots_to_make,current_system,current_shch,handles.progresspanel,1,resolution,handles)
+plot_info = sys_draw(plots_to_make,current_system,current_shch,handles.progresspanel,1,resolution,handles);
 
 %Show full progress bar
 waitbar2a(1,handles.progresspanel,'Finished plotting')

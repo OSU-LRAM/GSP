@@ -6,7 +6,7 @@ function [net_disp_orig, net_disp_opt, cost] = evaluate_displacement_and_cost(s,
 % S should be a sysplotter 's' structure loaded from a file
 % sysf_FILENAME_calc.mat (note the _calc suffix)
 %
-% P should be a structure with fields "phi" and "dphi", returning a
+% P should be a structure with fields "phi_def" and "dphi_def", returning a
 % vector of shapes and shape velocities respectively. If it is not
 % convenient to analytically describe the shape velocity function,
 % gait.dphi should be defined as 
@@ -70,7 +70,7 @@ function [net_disp_orig, net_disp_opt, cost] = evaluate_displacement_and_cost(s,
 
             % Convert the final motion into its representation in optimal
             % coordinates
-            startshape = p.phi(0);
+            startshape = p.phi_def{1}{1}(0);
             startshapelist = num2cell(startshape);
             beta_theta = interpn(s.grid.eval{:},s.B_optimized.eval.Beta{3},startshapelist{:},'cubic');
             net_disp_opt = [cos(beta_theta) sin(beta_theta) 0;...
@@ -84,7 +84,7 @@ function [net_disp_orig, net_disp_opt, cost] = evaluate_displacement_and_cost(s,
 	
 	% Convert the final motion into its representation in optimal
 	% coordinates
-	startshape = p.phi(0);
+	startshape = p.phi_def{1}{1}(0);
 	startshapelist = num2cell(startshape);
 	beta_theta = interpn(s.grid.eval{:},s.B_optimized.eval.Beta{3},startshapelist{:},'cubic');
 	net_disp_opt = [cos(beta_theta) sin(beta_theta) 0;...
@@ -99,9 +99,9 @@ end
 function [xi, dcost] = get_velocities(t,s,gait,ConnectionEval)
 
 	% Get the shape and shape derivative at the current time
-	shape = gait.phi(t);
+	shape = gait.phi_def{1}{1}(t);
 	shapelist = num2cell(shape);
-	dshape = gait.dphi(t);
+	dshape = gait.dphi_def{1}{1}(t);
 	
 	
 	% Get the local connection and metric at the current time, in the new coordinates	
@@ -116,7 +116,7 @@ function [xi, dcost] = get_velocities(t,s,gait,ConnectionEval)
 			
 			A = -cellfun(@(C) interpn(s.grid.eval{:},C,shapelist{:}),s.vecfield.eval.content.Avec);
 			
-			M =  cellfun(@(C) interpn(s.grid.eval{:},C,shapelist{:}),s.metricfield.eval.content.metric);
+			M =  cellfun(@(C) interpn(s.grid.metric_eval{:},C,shapelist{:}),s.metricfield.metric_eval.content.metric);
 			
 		otherwise
 			error('Unknown method for evaluating local connection');

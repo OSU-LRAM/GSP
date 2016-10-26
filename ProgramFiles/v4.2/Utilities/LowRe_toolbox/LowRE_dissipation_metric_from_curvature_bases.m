@@ -5,7 +5,7 @@ function Mp = LowRE_dissipation_metric_from_curvature_bases(kappa_basis_input,r,
 	int_limit = L*[-0.5 0.5];
 	
 	% Define the tangential, lateral drag matrix for unit/double drag
-	drag = [1 0; 0 2]*c;
+	drag = [1 0; 0 drag_ratio]*c;
 
 	% Get the backbone locus, Jacobian, and Local Connection functions
 	[A, h, J] = LowRE_local_connection_from_curvature_bases(kappa_basis_input,r,L,c,drag_ratio);

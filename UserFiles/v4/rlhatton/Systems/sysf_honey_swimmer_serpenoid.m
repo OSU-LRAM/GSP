@@ -83,7 +83,7 @@ function [Ar]=Conn_num(a1,a2)
 	%Apply the inverse multiplication
 	wb = waitbar2a(0,['Building ' num2str(size(a1)) ' connection matrix']);
 	Ar_cell = cell(size(a1));
-	for i = 1:numel(a1);
+	parfor i = 1:numel(a1);
 		Ar_cell{i} = A_num_helper(a1(i),a2(i));
 		waitbar2a(i/numel(a1));
 	end
