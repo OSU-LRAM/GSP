@@ -1,0 +1,3 @@
+[submodule "suresh-submodule1"]
+	path = suresh-submodule1
+	url = https://github.com/sureshr14/suresh-submodule.git
