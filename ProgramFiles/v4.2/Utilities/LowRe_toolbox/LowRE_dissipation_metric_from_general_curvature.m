@@ -5,10 +5,10 @@ function Mp = LowRE_dissipation_metric_from_general_curvature(curvdef,cparams,L,
 	int_limit = L*[-0.5 0.5];
 	
 	% Define the tangential, lateral drag matrix for unit/double drag
-	drag = [1 0; 0 2]*c;
+	drag = [1 0; 0 drag_ratio]*c;
 
 	% Get the backbone locus, Jacobian, and Local Connection functions
-	[A, h, J] = LowRE_local_connection_from_general_curvature(curvdef,cparams,L,c,drag_ratio);
+	[A, h, J,Omega] = LowRE_local_connection_from_general_curvature(curvdef,cparams,L,c,drag_ratio);
 
 	% Integrate along the body for the power metric
 	Mp_sol = ode_multistart(@ode45,@(s,Mp) dMetric(s,Mp,A,h,J,drag),int_limit,int_limit(1),zeros(length(cparams)^2,1));

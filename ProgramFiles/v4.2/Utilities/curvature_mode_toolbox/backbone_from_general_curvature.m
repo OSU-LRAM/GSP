@@ -5,20 +5,19 @@ function [h, J] = backbone_from_general_curvature(curvdef,cparams,L)
 all_limits = [-0.5 0 0.5];
 
 % Get backbone theta as a function of s
-theta_fun = @(s) curvdef(s,cparams,'angle');
+theta_fun = curvdef(cparams,'angle');
 
 % Get the x and y locations of points on the backbone
 locus_sol = ode_multistart(@ode45, @(s,h) locus_helper(s,theta_fun),all_limits,0,[0;0]);
 
 % Return the locus data as 3xn matrix with x,y,theta at each of n points
-%h = @(s) [L*(deval(locus_sol,torow(s)/L)-deval(locus_sol,0*torow(s))); theta_fun(torow(s)/L)];
 h_norm = @(s) [locus_sol(torow(s)); theta_fun(torow(s))]; % in normalized internal coordinates
 h = @(s) [L*locus_sol(torow(s)/L); theta_fun(torow(s)/L)]; % with actual length
 
 %%%%%%%%%%%%%%
 % Get the jacobian to body point velocities
 
-dcurvdef = @(s) curvdef(s,cparams,'dcurvature_int');
+dcurvdef = curvdef(cparams,'dcurvature_int');
 
 %Jacobian of theta function is the derivative of the curvature with respect
 %to each of the parameters, as definded in the curvdef function

@@ -1,4 +1,4 @@
-function output = shchf_serpenoid_varfreq_test1(input_mode)
+function output = shchf_circle_6(input_mode)
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -11,7 +11,7 @@ function output = shchf_serpenoid_varfreq_test1(input_mode)
 		
 		case 'name'
 			
-			output = 'Serpenoid varfreq test 1';
+			output = 'Circle Stroke, 6 amplitude';
 			
 		case 'dependency'
 			
@@ -35,12 +35,12 @@ function output = shchf_serpenoid_varfreq_test1(input_mode)
 			p.phi_arrows{1} = {2};
 
 			%time to run path
-			p.time_def{1} = {[0 2]};
+			p.time_def{1} = {[0 2*pi]};
 
 			%p.cBVI_method{1}{1} = 'simple';
 
 			%path resolution
-			p.phi_res{1} = {100};
+			p.phi_res{1} = {1000};
 
 
 			%%%%
@@ -52,10 +52,12 @@ end
 
 function [stroke] = strokedef(t)
 
-	t = t(:)';
+	t = -t(:)';
 
-    stroke = [9*ones(size(t));
-              9*ones(size(t));
-              .5 + 2*t].';
+	Rot=sqrt(2)/2*[1 -1;1 1];
+	a=6;
+
+	stroke=(Rot*[-a*cos(t);-a*sin(t)])';
+
 
 end

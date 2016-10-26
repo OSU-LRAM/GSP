@@ -1,4 +1,4 @@
-function [A, h, J] = LowRE_local_connection_from_general_curvature(curvdef,cparams,L,c,drag_ratio)
+function [A, h, J,Omega] = LowRE_local_connection_from_general_curvature(curvdef,cparams,L,c,drag_ratio)
 % Calculate the local connection for a set of curvature bases
 %
 % Inputs:
