@@ -108,7 +108,7 @@ function A = A_num_helper(a1,a2)
 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
 	% Get the local connection for the specified shape, with unit length
-	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2_half_period},[a1;a2],1,1);
+	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2_half_period},[a1;a2],1,1,2);
 
 
 end

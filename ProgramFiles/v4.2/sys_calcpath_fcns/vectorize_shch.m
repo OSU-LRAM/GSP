@@ -10,8 +10,8 @@ function p = vectorize_shch(p)
 				'cBVI_method'};
 				
 	
-	default_values = {[];		% Placeholder
-					[];			% Placeholder
+	default_values = {@(t)ones(size(t));		% Placeholder
+					@(t)ones(size(t));			% Placeholder
 					[0 2*pi];	% default timespan
 					[];			% no marker
 					0;			% no arrows
@@ -41,7 +41,7 @@ function p = vectorize_shch(p)
 				
 				else % make sure phi_def is a double-nested cell function
 
-					p.phi_def = doublewrap(p.phi_def,'function_handle');
+					p.phi_def = doublewrap(p.phi_def,class(default_values{i}));
 					
 				end
 					
@@ -65,6 +65,10 @@ function p = vectorize_shch(p)
 					
 					% Fill in any unspecified derivatives with numerical
 					% derivatives
+                    
+       				% Ensure double-wrapping of field
+    				p.(pathspec{i}) = doublewrap(p.(pathspec{i}),class(default_values{i}));
+
 					
 					% first, strokes and sections that were only partly
 					% addressed					
@@ -110,11 +114,13 @@ function p = vectorize_shch(p)
 					
 					% Create a single instance of the default object
 					p.(pathspec{i}) = default_values{i};
+                    
+                end
 					
-				end
+                    % Ensure double-wrapping of field
+                    p.(pathspec{i}) = doublewrap(p.(pathspec{i}),class(default_values{i}));
+
 				
-				% Ensure double-wrapping of field
-				p.(pathspec{i}) = doublewrap(p.(pathspec{i}),class(default_values{i}));
 				
 				%%%%
 				% Match the dimension of the field to that of the phi_def
@@ -166,7 +172,7 @@ end
 
 function B = doublewrap(A,classname)
 % take object A, verify that its core is of class CLASSNAME, and nest it inside
-% cell functions sufficient to make it doulbe-wrapped to return as B
+% cell functions sufficient to make it double-wrapped to return as B
 
 	% test for one layer deep
 	if iscell(A)

@@ -1,9 +1,9 @@
 function plot_info = disp_draw(s,p,plot_info,sys,shch,convert,resolution) %#ok<INUSD>
 %draw the bvi plots
 
-	% custom colors
-	crimson = [234 14 30]/255;
-	granite = [100 100 118]/255;
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 	
 	% define a color/linestyle list
 	
@@ -11,16 +11,16 @@ function plot_info = disp_draw(s,p,plot_info,sys,shch,convert,resolution) %#ok<I
 		
 		case 'mono'
 			
-			linelist = {crimson, '-'};
+			linelist = {Colorset.spot, '-'};
 			
 		case 'cycle'
 	
-			linelist = {crimson, '-';
-				granite, '--';
-				'k' ,':';
-				crimson, '--';
-				granite, ':';
-				'k' ,'-'};
+            linelist = {Colorset.spot, '-';
+                Colorset.secondary, '--';
+                'k' ,':';
+                Colorset.spot, '--';
+                Colorset.secondary, ':';
+                'k' ,'-'};
 		
 		otherwise
 			

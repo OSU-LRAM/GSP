@@ -63,6 +63,6 @@ function [stroke] = strokedef(t,A)
 
 	t = t(:)';
 
-	stroke = ((A*[cos(t); sin(t)]))';
+	stroke = ((A*[cos(t); -sin(t)]))';
 
 end

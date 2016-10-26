@@ -1,4 +1,5 @@
-function output = sysf_kinsnake_pi_over_2(input_mode, datapath)
+function output = sysf_kinsnake_pi_over_2(input_mode)
+
 
 	% Default argument
 	if ~exist('input_mode','var')
@@ -20,8 +21,6 @@ function output = sysf_kinsnake_pi_over_2(input_mode, datapath)
 			output.dependency = {};
 
 		case 'initialize'
-
-			%Initialize a kinematic snake with unit values for L and R
 
 			%%%%%
 			% Filename to save to
@@ -69,6 +68,7 @@ function output = sysf_kinsnake_pi_over_2(input_mode, datapath)
 
 end
 
+% Numerator of the connection
 function A_num = Conn_num(a1,a2)
 
 %	Unit body length
@@ -81,6 +81,7 @@ function A_num = Conn_num(a1,a2)
                  
 end
 
+% Denominator of the connection
 function A_den = Conn_den(a1,a2)
 
 %	Unit body length

@@ -22,9 +22,17 @@ function OKbutton_Callback(hObject, eventdata, handles)
 	
 	% Get the location of the Refpoint function
 	Refpointpath = get(handles.Refpointconfig,'String');
+    
+    % Get the colors to use in plots
+    [~,colorfunction, ~ ] = fileparts2(get(handles.Colorconfig,'String'));
+    Colorset = feval(colorfunction);
+    Colorpath = get(handles.Colorconfig,'String');
+    
+    % Additional hard-coded paths
+    sysplotterpath = pwd;
 
     % Save the path info to a file for sysplotter to refer to
-    save('sysplotter_config','inputpath','syspath','shchpath','stretchpath','datapath','HHpath','Refpointpath');
+    save('sysplotter_config','inputpath','syspath','shchpath','stretchpath','datapath','HHpath','Refpointpath','Colorset','Colorpath','sysplotterpath');
     
     % Update the sysplotter_inputpath variable in the workspace
     assignin('base','sysplotter_inputpath',inputpath);

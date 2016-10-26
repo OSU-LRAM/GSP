@@ -110,8 +110,6 @@ end
 % delta-functions and the like
 
 %summed integral of the curvature functions
-%theta_fun = @(s) sum(cell2mat(cellfun( @(k,r) [0
-%r]*(k(torow(s))-k(torow(zeros(size(s))))), kappa_basis,num2cell(r),'UniformOutput',false)),1);
 theta_fun = @(s) sum(cell2mat(cellfun( @(k,r) theta_fun_helper(k,r,s), kappa_basis,num2cell(r),'UniformOutput',false)),1);
 
 

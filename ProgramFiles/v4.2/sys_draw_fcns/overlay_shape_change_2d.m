@@ -1,10 +1,11 @@
 function overlay_shape_change_2d(ax,p,convert)
 %overlay shape changes onto the specified axis
 
-	% Declare a new red
-	crimson = [234 14 30]/255;
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 
-	%plot all paths
+    %plot all paths
 	for i = 1:numel(p.phi_locus)
 
 
@@ -17,10 +18,15 @@ function overlay_shape_change_2d(ax,p,convert)
 
 
 		%draw the path itself
-		line(p.phi_locus_full{i}.shape(:,1),p.phi_locus_full{i}.shape(:,2),'Color',crimson,'LineWidth',5,'Parent',ax);
+        
+        for idx = 1:size(p.phi_locus_full{i}.shape,2)
+            pathpoints{idx} = p.phi_locus_full{i}.shape(:,idx);
+        end
+        
+		line(pathpoints{:},'Color',Colorset.spot,'LineWidth',5,'Parent',ax);
 
 		%draw the direction arrows on the line
-		plot_dir_arrows(p.phi_locus_full{i}.shape(:,1),p.phi_locus_full{i}.shape(:,2),p.phi_arrows{i}{1},'Color',crimson,'LineWidth',4,'Parent',ax);
+		plot_dir_arrows(p.phi_locus_full{i}.shape(:,1),p.phi_locus_full{i}.shape(:,2),p.phi_arrows{i}{1},'Color',Colorset.spot,'LineWidth',4,'Parent',ax);
 
 		%draw the start/end markers
 		if ~isempty(p.phi_locus_full{i}.marker.shape)

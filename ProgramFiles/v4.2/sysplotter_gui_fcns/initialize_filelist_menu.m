@@ -4,9 +4,10 @@ function initialize_filelist_menu(hObject,heading,dirname,prefix,recent_listname
     [displaynames, filenames] = list_files(dirname,prefix);
     
     % Put default and null options on system list, and pad the shortnames
-    displaylist = [vertcat(heading.display(:));'-';'-';displaynames];%;'No system'];
-    filelist = [vertcat(heading.file(:));'start_recent';'end_recent';filenames];%;'null'];
     
+    displaylist = [vertcat(heading.display(:));'-';'-';displaynames];
+    filelist = [vertcat(heading.file(:));'start_recent';'end_recent';filenames];
+        
     % insert displaynames as the string and shortnames as the userdata
     set(hObject,'String',displaylist,'UserData',filelist,'Value',1);
 	

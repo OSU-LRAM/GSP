@@ -5,12 +5,12 @@ function plot_info = xy_draw_helper(s,p,plot_info,sys,shch,convert,optselect);
 	%for those axes if necessary
 	plot_info = ensure_figure_axes(plot_info);
 	
-	% custom colors
-	crimson = [234 14 30]/255;
-	granite = [100 100 118]/255;
+    %Get the configuration file, and extract the Colorpath
+	configfile = './sysplotter_config';
+	load(configfile,'Colorset');
 	
 	% define a color list
-	colorlist = {crimson, granite, 'k'};
+	colorlist = {Colorset.spot, Colorset.secondary, 'k'};
 	
 	% Get the axes to plot into
 	ax = plot_info.axes;
@@ -37,9 +37,9 @@ function plot_info = xy_draw_helper(s,p,plot_info,sys,shch,convert,optselect);
 		
 		% Set the line color
 		if  numel(p.G_locus_full) == 1
-			traj_color = crimson;
-			BVI_color = crimson;
-			cBVI_color = crimson;
+			traj_color = Colorset.spot;
+			BVI_color = Colorset.spot;
+			cBVI_color = Colorset.spot;
 		else
 			listnum = mod(i-1,numel(colorlist))+1;
 			[traj_color,BVI_color,cBVI_color] = deal(colorlist{listnum});
@@ -147,9 +147,11 @@ function plot_info = xy_draw_helper(s,p,plot_info,sys,shch,convert,optselect);
 		% Set the axes with a nice buffering
 		[x_min,x_max,y_min,y_max] = ...
 			set_axis_limits(ax,x_collect,y_collect,.07,.07);
-	end
+    end
+    set(ax,'ZLim',10*[-1 1]); % prevent layering from going outside zlim
 	axis(ax,'equal');
 	new_lim = [get(ax,'xlim') get(ax,'ylim')];
+    
 	
 	
 	%%%%%%%

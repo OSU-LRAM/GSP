@@ -49,16 +49,16 @@ function output = sysf_honey_swimmer_serpenoid(input_mode)
 			s.singularity = 0;
 
 			%Range over which to evaluate connection
-			s.grid_range = [-1,1,-1,1]*8;
+			s.grid_range = [-1,1,-1,1]*12;
 
 			%densities for various operations
 			s.density.vector = [11 11]; %density to display vector field
 			s.density.scalar = [21 21]; %density to display scalar functions
-			s.density.eval = [11 11];   %density for function evaluations
+			s.density.eval = [21 21];   %density for function evaluations
 			s.finite_element_density = 11;
 			% power metric
-			s.metric = @(x,y) eye(2);%@(x,y) LowRE_dissipation_metric_from_curvature_bases...
-				%({@serpenoid_1;@serpenoid_2},[x;y],1,1);
+			s.metric = @(x,y) LowRE_dissipation_metric_from_curvature_bases...
+				({@serpenoid_1;@serpenoid_2},[x;y],1,1,2);  % @(x,y) eye(2);%
 
 			%%%
 			%Display parameters
@@ -83,7 +83,7 @@ function [Ar]=Conn_num(a1,a2)
 	%Apply the inverse multiplication
 	wb = waitbar2a(0,['Building ' num2str(size(a1)) ' connection matrix']);
 	Ar_cell = cell(size(a1));
-	for i = 1:numel(a1);
+	parfor i = 1:numel(a1);
 		Ar_cell{i} = A_num_helper(a1(i),a2(i));
 		waitbar2a(i/numel(a1));
 	end
@@ -104,11 +104,11 @@ end
 
 function A = A_num_helper(a1,a2)
 
-	% Add the path to the curvature functions
-	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
-	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
+% 	% Add the path to the curvature functions
+% 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/curvature_mode_toolbox'))
+% 	addpath(genpath('/Users/rlhatton/Documents/MATLAB/LowRE_toolbox/'))
 	% Get the local connection for the specified shape, with unit length
-	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2},[a1;a2],1,1);
+	A = LowRE_local_connection_from_curvature_bases({@serpenoid_1;@serpenoid_2},[a1;a2],1,1,2);
 
 
 end
